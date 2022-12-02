@@ -223,11 +223,7 @@ bool CoopGT::setReference(const Eigen::VectorXd& ref_1, const Eigen::VectorXd& r
   }
     
   reference_ = Q_gt_.inverse() * (Q1_*ref_1 + Q2_*ref_2);
-  
-  ROS_INFO_STREAM("reference_: "<<reference_.transpose());
-  ROS_INFO_STREAM("ref_1: "<<ref_1.transpose());
-  ROS_INFO_STREAM("ref_2: "<<ref_2.transpose());
-  
+    
   reference_ok_ = true;
   return true;
 }
