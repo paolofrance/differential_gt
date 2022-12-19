@@ -112,7 +112,6 @@ int main(int argc, char **argv)
 
   for (int i = 0;i<10;i++)  
   {
-//     auto mid = std::chrono::steady_clock::now();
     
     rh = ref_h.segment(i,1);
     rr = ref_r.segment(i,1);
@@ -135,8 +134,6 @@ int main(int argc, char **argv)
 //     ROS_INFO_STREAM("control: " << control.transpose());
 //     ROS_INFO_STREAM("state: " << X.transpose());
 
-//     auto end = std::chrono::steady_clock::now();
-//     ROS_INFO_STREAM("time to compute: "<<std::chrono::duration_cast<std::chrono::microseconds>(end- mid).count());
   }
   
   
