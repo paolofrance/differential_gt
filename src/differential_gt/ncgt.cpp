@@ -18,8 +18,8 @@ NonCoopGT::NonCoopGT(const int& n_dofs, const double& dt): n_dofs_(n_dofs), dt_(
   R12_.resize(n_dofs_,n_dofs_); R12_.setZero();
   R21_.resize(n_dofs_,n_dofs_); R21_.setZero();
   
-  ref_1_.resize(n_dofs_); ref_1_.setZero();
-  ref_2_.resize(n_dofs_); ref_2_.setZero();
+  ref_1_.resize(2*n_dofs_); ref_1_.setZero();
+  ref_2_.resize(2*n_dofs_); ref_2_.setZero();
   
   K_1_.resize(n_dofs_,2*n_dofs_); K_1_.setZero();
   K_2_.resize(n_dofs_,2*n_dofs_); K_2_.setZero();
@@ -29,6 +29,7 @@ NonCoopGT::NonCoopGT(const int& n_dofs, const double& dt): n_dofs_(n_dofs), dt_(
   sys_params_set_ = false;
   cost_params_set_= false;
   gains_set_      = false;
+  init_P12_       = true;
 }
 void NonCoopGT::setSysParams( const Eigen::MatrixXd& A,
                               const Eigen::MatrixXd& B)
@@ -234,12 +235,22 @@ void NonCoopGT::solveNashEquilibrium( const Eigen::MatrixXd &A,
   Eigen::MatrixXd S2  = B2 * R2.inverse() * B2.transpose();
   Eigen::MatrixXd S12 = B1 * R1.inverse() * R21 * R1.inverse() * B1.transpose();
   Eigen::MatrixXd S21 = B2 * R2.inverse() * R12 * R2.inverse()* B2.transpose();
-
-  solveRiccati(A,B1,Q1,R1,P1);
-  solveRiccati(A,B2,Q2,R2,P2);
   
-  Eigen::MatrixXd P1_prev = P1;
-  Eigen::MatrixXd P2_prev = P2;
+  if (init_P12_)
+  {
+    solveRiccati(A,B1,Q1,R1,P1);
+    solveRiccati(A,B2,Q2,R2,P2);
+    P1_prev_ = P1;
+    P2_prev_ = P2;
+    init_P12_ = false;
+  }
+  else
+  {
+    P1=P1_prev_;
+    P2=P2_prev_;
+
+  }
+
   double err_1 = 1;
   double err_2 = 1;
   double toll = 0.00001;
@@ -254,36 +265,34 @@ void NonCoopGT::solveNashEquilibrium( const Eigen::MatrixXd &A,
     Eigen::MatrixXd Q_2 = Q2 + P2*S12*P2;
     solveRiccati(A2,B2,Q_2,R2,P2);
   
-    err_1 = (P1-P1_prev).norm();
-    err_2 = (P2-P2_prev).norm();
+    err_1 = (P1-P1_prev_).norm();
+    err_2 = (P2-P2_prev_).norm();
     
-    P1_prev = P1;
-    P2_prev = P2;
+    P1_prev_ = P1;
+    P2_prev_ = P2;
   }
   
   return;
 }
 
-bool NonCoopGT::computeControlInputs(Eigen::VectorXd& u1, Eigen::VectorXd& u2)
+Eigen::VectorXd  NonCoopGT::computeControlInputs()
 {
   if (!state_ok_)
-  {
     ROS_WARN_STREAM("State is not updated. computing gains on the last state received: " << X_.transpose());
-    return false;
-  }
   if (!reference_ok_)
-  {
     ROS_WARN_STREAM("Reference is not updated. computing gains on the last reference received. ");
-    return false;
-  }
   
   state_ok_     = false;
   reference_ok_ = false;
   
-  u1 = -K_1_ * (X_ - ref_1_);
-  u2 = -K_2_ * (X_ - ref_2_);
+  Eigen::VectorXd u1 = -K_1_ * (X_ - ref_1_);
+  Eigen::VectorXd u2 = -K_2_ * (X_ - ref_2_);
   
-  return true;
+  Eigen::VectorXd control; control.resize(2*n_dofs_);
+  control << u1,
+             u2;
+             
+  return control;
 }
 
 Eigen::VectorXd NonCoopGT::step(const Eigen::VectorXd& x, const Eigen::VectorXd& ref_1, const Eigen::VectorXd& ref_2)
@@ -306,9 +315,10 @@ Eigen::VectorXd NonCoopGT::step(const Eigen::VectorXd& x, const Eigen::VectorXd&
   else
     ROS_ERROR("references have an incorrect length .");
   
-  Eigen::VectorXd u1,u2; u1.resize(n_dofs_);u2.resize(n_dofs_);
-  computeControlInputs(u1,u2);
-  
+  Eigen::VectorXd u1,u2,u; u1.resize(n_dofs_);u2.resize(n_dofs_);u.resize(2*n_dofs_);
+  u = computeControlInputs();
+  u1=u.segment(0,n_dofs_);
+  u2=u.segment(n_dofs_,n_dofs_);
   
   setCurrentState(x);
   dX_ = A_*X_ + B_*u1 + B_*u2;

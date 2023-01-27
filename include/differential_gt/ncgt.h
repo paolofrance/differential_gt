@@ -43,7 +43,8 @@ public:
   bool setReference(const Eigen::VectorXd& ref_1, const Eigen::VectorXd& ref_2);
   void getReference(Eigen::VectorXd& ref_1, Eigen::VectorXd& ref_2);
 
-  bool computeControlInputs(Eigen::VectorXd& u1, Eigen::VectorXd& u2);
+//   bool computeControlInputs(Eigen::VectorXd& u1, Eigen::VectorXd& u2);
+  Eigen::VectorXd  computeControlInputs();
   Eigen::VectorXd step(const Eigen::VectorXd& x, const Eigen::VectorXd& ref_1, const Eigen::VectorXd& ref_2);
   Eigen::VectorXd step(const Eigen::VectorXd& ref_1, const Eigen::VectorXd& ref_2);
   
@@ -85,6 +86,10 @@ void solveNashEquilibrium( const Eigen::MatrixXd &A,
   Eigen::MatrixXd K_1_;
   Eigen::MatrixXd K_2_;
   
+  bool init_P12_;
+  Eigen::MatrixXd P1_prev_;
+  Eigen::MatrixXd P2_prev_;
+
   Eigen::VectorXd ref_1_;
   Eigen::VectorXd ref_2_;
 

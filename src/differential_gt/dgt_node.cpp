@@ -93,13 +93,22 @@ int main(int argc, char **argv)
   
   ncgt.setCostsParams(Qh,Qr,Rh,Rr);
   
+  ROS_INFO_STREAM("Qh: \n"<<Qh);
+  ROS_INFO_STREAM("Qr: \n"<<Qr);
+  ROS_INFO_STREAM("Rh: \n"<<Rh);
+  ROS_INFO_STREAM("Rr: \n"<<Rr);
   
   
   cgt.computeCooperativeGains();
   
-  ROS_INFO_STREAM("gt: \n"<<cgt.getCooperativeGains());
+  ROS_INFO_STREAM("cgt: \n"<<cgt.getCooperativeGains());
   
   ncgt.computeNonCooperativeGains();
+  
+  Eigen::MatrixXd Kh,Kr;
+  ncgt.getNonCooperativeGains(Kh,Kr);
+  ROS_INFO_STREAM("Kh: \n"<<Kh);
+  ROS_INFO_STREAM("Kr: \n"<<Kr);
   
   
   std::cin.get();
