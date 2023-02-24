@@ -216,6 +216,7 @@ Eigen::MatrixXd NonCoopGT::solveRiccati(const Eigen::MatrixXd &A,
   Vs_1 = eigvec.block(0, 0, dim_x, dim_x);
   Vs_2 = eigvec.block(dim_x, 0, dim_x, dim_x);
   P = (Vs_2 * Vs_1.inverse()).real();
+
   
   return R.inverse()*B.transpose()*P;
 }
@@ -291,6 +292,13 @@ Eigen::VectorXd  NonCoopGT::computeControlInputs()
   Eigen::VectorXd control; control.resize(2*n_dofs_);
   control << u1,
              u2;
+             
+  if(n_dofs_>3)
+  {
+    control(9) = 0;
+    control(10)= 0;
+  }
+
              
   return control;
 }

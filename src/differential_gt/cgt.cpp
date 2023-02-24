@@ -180,8 +180,12 @@ void CoopGT::computeCooperativeGains(const Eigen::MatrixXd& Q, const Eigen::Matr
   Eigen::MatrixXd B_gt; B_gt.resize(B_.rows(),2*B_.cols());
   B_gt << B_,B_;
   Eigen::MatrixXd P_cgt;
-  K_cgt_ = solveRiccati(A_, B_gt, Q, R, P_cgt);
-  
+  Eigen::MatrixXd kk = solveRiccati(A_, B_gt, Q, R, P_cgt);
+//   K_cgt_ = kk.diagonal().asDiagonal();
+  K_cgt_.topLeftCorner    (n_dofs_,n_dofs_) = kk.topLeftCorner    (n_dofs_,n_dofs_).diagonal().asDiagonal();
+  K_cgt_.topRightCorner   (n_dofs_,n_dofs_) = kk.topRightCorner   (n_dofs_,n_dofs_).diagonal().asDiagonal();
+  K_cgt_.bottomRightCorner(n_dofs_,n_dofs_) = kk.bottomRightCorner(n_dofs_,n_dofs_).diagonal().asDiagonal();
+  K_cgt_.bottomLeftCorner (n_dofs_,n_dofs_) = kk.bottomLeftCorner (n_dofs_,n_dofs_).diagonal().asDiagonal();
   ROS_DEBUG_STREAM("K_cgt\n: "<<K_cgt_);
 
   gains_set_ = true;
@@ -223,7 +227,7 @@ bool CoopGT::setReference(const Eigen::VectorXd& ref_1, const Eigen::VectorXd& r
   }
     
   reference_ = Q_gt_.inverse() * (Q1_*ref_1 + Q2_*ref_2);
-    
+  
   reference_ok_ = true;
   return true;
 }
@@ -326,7 +330,11 @@ Eigen::VectorXd CoopGT::computeControlInputs()
   reference_ok_ = false;
   
   Eigen::VectorXd control = -K_cgt_ * X_ + K_cgt_ * reference_;
-  
+  if(n_dofs_>3)
+  {
+    control(9) = 0;
+    control(10)= 0;
+  }
   return control;
 }
 
