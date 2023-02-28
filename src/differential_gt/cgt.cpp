@@ -332,6 +332,9 @@ Eigen::VectorXd CoopGT::computeControlInputs()
   Eigen::VectorXd control = -K_cgt_ * X_ + K_cgt_ * reference_;
   if(n_dofs_>3)
   {
+    control(3) = 0;
+    control(4)= 0;
+    
     control(9) = 0;
     control(10)= 0;
   }
