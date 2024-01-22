@@ -28,7 +28,7 @@ You can find more details in the [related publication]((https://ieeexplore.ieee.
 
 
 ## Citation
-Of you are using this repository, please consider citing it as 
+If you are using this repository, please consider citing it as 
 ```
 @ARTICLE{10275780,
 author={Franceschi, Paolo and Pedrocchi, Nicola and Beschi, Manuel},
