@@ -2,7 +2,7 @@
 
 This package implements the solution for the two-players Linear-Quadratic differential game-theoretic problem.
 
-This implementation has been used in the work proposed in "Franceschi, Paolo, Nicola Pedrocchi, and Manuel Beschi. [Human–Robot Role Arbitration via Differential Game Theory. IEEE Transactions on Automation Science and Engineering (2023)."](https://ieeexplore.ieee.org/abstract/document/10275780).
+This implementation has been used in the works proposed in "Franceschi, Paolo, Nicola Pedrocchi, and Manuel Beschi. [Human–Robot Role Arbitration via Differential Game Theory.](https://ieeexplore.ieee.org/abstract/document/10275780) IEEE Transactions on Automation Science and Engineering (2023).", and in [Modeling and analysis of pHRI with Differential Game Theory](https://arxiv.org/abs/2307.10739).
 
 This repository addressed the solution of the Non-Cooperative case, the so-called Nash Equilibrium, and the solution of the Cooperative case, the Pareto frontier.
 
@@ -24,7 +24,7 @@ $$\begin{split}
     & z_c(t_0) =z_0
   \end{split}$$
 
-You can find more details in the [related publication]((https://ieeexplore.ieee.org/abstract/document/10275780)), and in [Engwerda, Jacob. LQ dynamic optimization and differential games. John Wiley & Sons, 2005.](https://www.wiley.com/en-us/LQ+Dynamic+Optimization+and+Differential+Games-p-9780470015247).
+You can find more details in the related publications [here]((https://ieeexplore.ieee.org/abstract/document/10275780)) and [here](https://arxiv.org/abs/2307.10739), and in [Engwerda, Jacob. LQ dynamic optimization and differential games. John Wiley & Sons, 2005.](https://www.wiley.com/en-us/LQ+Dynamic+Optimization+and+Differential+Games-p-9780470015247).
 
 
 ## Citation
