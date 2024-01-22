@@ -17,10 +17,11 @@ $$\begin{split}
   \end{split}$$
 
 and the Cooperative 
-
-$$\min_{u}J_{c}  =  \int_{0}^{\infty}( z^T\,Q_{c}\,z + u^T\,R_{c}\,u )\,dt\\
-     \; \; s.t. \; \dot{z} = A\,z+Bu\\ 
-    \qquad z(t_0)=z_{0}$$
+$$\begin{split}
+    & \min_{u}J_{c}  =  \int_{0}^{\infty}( z^T\,Q_{c}\,z + u^T\,R_{c}\,u )\,dt \\
+    & s.t. \; \dot{z} = A_{c}\,z_{c}+B_{c}u_{c} \\
+    & z_c(t_0) =z_0
+  \end{split}$$
 
 You can find more details in the [related publication]((https://ieeexplore.ieee.org/abstract/document/10275780)), and in [Engwerda, Jacob. LQ dynamic optimization and differential games. John Wiley & Sons, 2005.](https://www.wiley.com/en-us/LQ+Dynamic+Optimization+and+Differential+Games-p-9780470015247).
 
