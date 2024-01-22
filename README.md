@@ -17,6 +17,7 @@ $$\begin{split}
   \end{split}$$
 
 and the Cooperative 
+
 $$\begin{split}
     & \min_{u}J_{c}  =  \int_{0}^{\infty}( z^T\,Q_{c}\,z + u^T\,R_{c}\,u )\,dt \\
     & s.t. \; \dot{z} = A_{c}\,z_{c}+B_{c}u_{c} \\
